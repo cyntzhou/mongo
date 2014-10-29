@@ -1,13 +1,16 @@
-from flask import Flask,request,render_template,redirect,session
-from pymongo import Connection
+from flask import Flask, request, render_template, redirect, session
 
-app=Flask(__name__)
+import db
+
+app = Flask(__name__)
+
 
 @app.route("/")
 def home():
     if "username" in session:
         return "Logged in as %s" % (session["username"])
-    return "You are not logged in"
+    return render_template('home.html')
+
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -53,13 +56,16 @@ def register():
             else:
                 return render_template("register.html")
 
+
 @app.route("/logout")
 def logout():
     session.pop("username", None)
     return redirect("/login")
 
+
 def valid(username, password):
     return True
+
 
 if __name__=="__main__":
     app.secret_key="Happy Halloween"
