@@ -16,45 +16,43 @@ def home():
 def login():
     if request.method=="GET":
         return render_template("login.html")
+
+    button = request.form["button"]
+    username = request.form["username"]
+    password = request.form["password"]
+    valid_user = valid(username,password)
+    if button=="cancel" or not(valid_user):
+        return render_template("login.html")
     else:
-        button = request.form["button"]
-        username = request.form["username"]
-        password = request.form["password"]
-        valid_user = valid(username,password)
-        if button=="cancel" or not(valid_user):
-            return render_template("login.html")
+        criteria = {'username': username, 'password': password}
+        user = db.find_user(criteria)
+        if user:
+            session['username'] = username
+            return redirect('/')
         else:
-            conn = Connection()
-            db = conn["hi"] 
-            if db.users.find({username:username,password:password})==None:
-                return "Invalid username and password combination"
-            else:
-                session["username"] = username
-                return redirect("/")
-            
+            return "Invalid username and password combination"
+
 
 @app.route("/register", methods=["GET","POST"])
 def register():
     if request.method=="GET":
         return render_template("register.html")
+
+    button = request.form["button"]
+    username = request.form["username"]
+    password = request.form["password"]
+    valid_user = valid(username, password)
+    if button=="cancel":
+        return redirect("/")
     else:
-        button = request.form["button"]
-        username = request.form["username"]
-        password = request.form["password"]
-        valid_user = valid(username,password)
-        if button=="cancel":
-            return redirect("/")
+        criteria = {'username': username}
+        if db.find_user(criteria):
+            return render_template("register.html")
         else:
-            conn = Connection()
-            db = conn["hi"]
-            if db.users.find({username:username})==None:
-                entry = {"username":username,"password":password}
-                db.users.insert(entry)
-                print entry
-                session["username"] = username
-                return redirect("/")
-            else:
-                return render_template("register.html")
+            user_params ={'username': username, 'password':password}
+            db.new_user(user_params)
+            session['username'] = username
+            return redirect('/')
 
 
 @app.route("/logout")
