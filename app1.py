@@ -22,12 +22,36 @@ def login():
             return render_template("login.html")
         else:
             conn = Connection()
-            db = conn["hi"]
-            entry = {"username":username,"password":password}
-            db.users.insert(entry)
-            print entry
-            session["username"] = username
+            db = conn["hi"] 
+            if db.users.find({username:username,password:password})==None:
+                return "Invalid username and password combination"
+            else:
+                session["username"] = username
+                return redirect("/")
+            
+
+@app.route("/register", methods=["GET","POST"])
+def register():
+    if request.method=="GET":
+        return render_template("register.html")
+    else:
+        button = request.form["button"]
+        username = request.form["username"]
+        password = request.form["password"]
+        valid_user = valid(username,password)
+        if button=="cancel":
             return redirect("/")
+        else:
+            conn = Connection()
+            db = conn["hi"]
+            if db.users.find({username:username})==None:
+                entry = {"username":username,"password":password}
+                db.users.insert(entry)
+                print entry
+                session["username"] = username
+                return redirect("/")
+            else:
+                return render_template("register.html")
 
 @app.route("/logout")
 def logout():
