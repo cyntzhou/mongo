@@ -16,7 +16,7 @@ def home():
 def login():
     if request.method=="GET":
         return render_template("login.html")
-
+    
     button = request.form["button"]
     username = request.form["username"]
     password = request.form["password"]
@@ -54,6 +54,14 @@ def register():
             session['username'] = username
             return redirect('/')
 
+@app.route("/display")
+def display():
+    if "username" in session:
+        username = session['username']
+        password = db.find_user({'username':username})["password"]
+        return render_template("display.html",username=username,password=password)
+    else:
+        return render_template("login.html")
 
 @app.route("/logout")
 def logout():
@@ -61,6 +69,12 @@ def logout():
     return redirect("/login")
 
 
+def check_logged_in():
+    if "username" in session:
+        return '<a href="/display">Logged in as '+username
+    else:
+        return '<a href="/login">Log In'
+    
 def valid(username, password):
     return True
 
