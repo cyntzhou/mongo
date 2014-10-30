@@ -16,5 +16,4 @@ def find_user(criteria):
 
 
 def update_user(criteria, changeset):
-    user = db.users.update(criteria, changeset)
-    return user
+    db.users.update(criteria, changeset)
