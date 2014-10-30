@@ -35,7 +35,7 @@ def login():
 
 @app.route('/register', methods=['GET','POST'])
 def register():
-    if request.method=='GET':
+    if request.method == 'GET':
         return render_template('register.html')
 
     button = request.form['button']
@@ -49,7 +49,7 @@ def register():
         if db.find_user(criteria):
             return render_template('register.html')
         else:
-            user_params ={'username': username, 'password':password}
+            user_params = {'username': username, 'password': password}
             db.new_user(user_params)
             session['username'] = username
             return redirect('/')
@@ -59,6 +59,44 @@ def register():
 def logout():
     session.pop('username', None)
     return redirect('/login')
+
+
+@app.route('/account/change', methods=['GET', 'POST'])
+def change_account():
+    if not session['username']:
+        redirect('/')
+
+    if request.method == 'GET':
+        return render_template('change_account.html')
+
+    if request.form['button'] == 'cancel':
+        return redirect('/')
+
+    criteria = {'username': session['username']}
+
+    username = request.form['username']
+    password = request.form['password']
+    changeset = {}
+    if username:
+        changeset['username'] = username
+    if password:
+        changeset['password'] = password
+
+    if valid_change(changeset):
+        db.update_user(criteria, changeset)
+        if username:
+            session['username'] = username
+        return redirect('/')
+    else:
+        return render_template('change_account.html')
+
+
+def valid_change(changeset):
+    if changeset['username'] == session['username']:
+        return False
+    if db.find_user(changeset['username']):
+        return False
+    return True
 
 
 def valid(username, password):

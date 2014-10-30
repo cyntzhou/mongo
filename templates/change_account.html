@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block body %}
+If you wish to change your username or password, please enter them here.
+<form method="POST">
+  <input type="text" name="username">
+  <input type="text" name="password">
+  <input type="submit" name="button" value="change">
+  <input type="submit" name="button" value="cancel">
+</form>
+{% endblock %}
