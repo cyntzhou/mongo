@@ -9,6 +9,12 @@ def new_user(user_params):
     user_id = users.insert(user_params)
     return user_id
 
+
 def find_user(criteria):
     user = users.find_one(criteria)
+    return user
+
+
+def update_user(criteria, changeset):
+    user = db.users.update(criteria, changeset)
     return user
