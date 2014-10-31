@@ -26,6 +26,7 @@ def login():
         user = db.find_user(criteria)
         if user:
             session['username'] = username
+            db.touch_user_login_time(criteria)
             return redirect('/')
         else:
             return 'Invalid username and password combination'
@@ -55,11 +56,10 @@ def register():
 @app.route('/display')
 def display():
     if 'username' in session:
-        username = session['username']
-        password = db.find_user({'username': username})['password']
-        return render_template('display.html', username=username, password=password)
+        user = db.find_user({'username': session['username']})
+        return render_template('display.html', user=user)
     else:
-        return render_template("login.html")
+        return render_template('login.html')
 
 
 @app.route('/logout')

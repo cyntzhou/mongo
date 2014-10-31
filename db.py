@@ -1,3 +1,5 @@
+import datetime
+
 from pymongo import MongoClient
 
 client = MongoClient()
@@ -17,3 +19,11 @@ def find_user(criteria):
 
 def update_user(criteria, changeset):
     db.users.update(criteria, changeset)
+
+
+def touch_user_login_time(criteria):
+    update_user(criteria, {'last_login_at': datetime.datetime.now()})
+
+
+def touch_user_logout_time(criteria):
+    update_user(criteria, {'last_logout_at': datetime.datetime.now()})

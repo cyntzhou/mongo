@@ -2,6 +2,7 @@
 
 {% block body %}
 <h1>Account Information</h1>
-Username: {{username}} <br>
-Password: {{password}}
+Username: {{user['username']}} <br>
+Password: {{user['password']}} <br>
+Last logged in at: {{user['last_login_at']}}
 {% endblock %}
