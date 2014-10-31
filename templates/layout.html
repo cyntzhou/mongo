@@ -15,6 +15,23 @@
     <link rel="stylesheet" href="/static/main.css">
   </head>
   <body>
+    <div class="header">
+      <div class="pure-menu pure-menu-open pure-menu-horizontal">
+        <a class="pure-menu-heading" href="">Facebook</a>
+
+        <ul>
+          <li class="pure-menu-selected"><a href="/">Home</a></li>
+          <li><a href="/display">Display Account</a></li>
+          <li><a href="/account/change">Change Account</a></li>
+          {% if session['username'] %}
+          <li><a href="">{{ session['username'] }}</a></li>
+          <li><a href="/logout">Logout</a></li>
+          {% else %}
+          <li><a href="/login">Login</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
     {% block body %}
     {% endblock %}
 

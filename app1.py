@@ -7,12 +7,10 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    if 'username' in session:
-        return 'Logged in as %s' % (session['username'])
     return render_template('home.html')
 
 
-@app.route('/login', methods=['GET','POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         return render_template('login.html')
@@ -20,7 +18,7 @@ def login():
     button = request.form['button']
     username = request.form['username']
     password = request.form['password']
-    valid_user = valid(username,password)
+    valid_user = valid(username, password)
     if button == 'cancel' or not(valid_user):
         return render_template('login.html')
     else:
@@ -33,7 +31,7 @@ def login():
             return 'Invalid username and password combination'
 
 
-@app.route('/register', methods=['GET','POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         return render_template('register.html')
@@ -41,7 +39,6 @@ def register():
     button = request.form['button']
     username = request.form['username']
     password = request.form['password']
-    valid_user = valid(username, password)
     if button == 'cancel':
         return redirect('/')
     else:
@@ -54,14 +51,16 @@ def register():
             session['username'] = username
             return redirect('/')
 
-@app.route("/display")
+
+@app.route('/display')
 def display():
-    if "username" in session:
+    if 'username' in session:
         username = session['username']
-        password = db.find_user({'username':username})["password"]
-        return render_template("display.html",username=username,password=password)
+        password = db.find_user({'username': username})['password']
+        return render_template('display.html', username=username, password=password)
     else:
         return render_template("login.html")
+
 
 @app.route('/logout')
 def logout():
@@ -108,16 +107,17 @@ def valid_change(changeset):
 
 
 def check_logged_in():
-    if "username" in session:
-        return '<a href="/display">Logged in as '+username
+    if 'username' in session:
+        return '<a href="/display">Logged in as ' + session['username']
     else:
         return '<a href="/login">Log In'
-    
+
+
 def valid(username, password):
     return True
 
 
 if __name__ == '__main__':
     app.secret_key = 'Happy Halloween'
-    app.debug=True
-    app.run();
+    app.debug = True
+    app.run()
