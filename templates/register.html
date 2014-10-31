@@ -1,3 +1,6 @@
+{% extends 'layout.html' %}
+
+{% block body %}
 <form method="POST">
   Please enter your desired username and password.
   <input type="text" name="username">
@@ -5,3 +8,4 @@
   <input type="submit" name="button" value="register">
   <input type="submit" name="button" value="cancel">
 </form>
+{% endblock %}
