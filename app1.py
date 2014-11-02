@@ -29,7 +29,7 @@ def login():
             db.touch_user_login_time(criteria)
             return redirect('/')
         else:
-            return 'Invalid username and password combination'
+            return 'Invalid username and password combination <br><a href="\">Go Back</a>'
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -70,8 +70,8 @@ def logout():
 
 @app.route('/account/change', methods=['GET', 'POST'])
 def change_account():
-    if not session['username']:
-        redirect('/')
+    if 'username' not in session:
+        return redirect('/login')
 
     if request.method == 'GET':
         return render_template('change_account.html')

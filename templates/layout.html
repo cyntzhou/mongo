@@ -10,33 +10,52 @@
     </title>
 
     <link rel="stylesheet" href="//yui.yahooapis.com/pure/0.5.0/pure-min.css">
+
+<!-- The font awesome stuff doesn't do anything!
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 
     <link rel="stylesheet" href="/static/main.css">
+-->
   </head>
-  <body>
-    <div class="header">
-      <div class="pure-menu pure-menu-open pure-menu-horizontal">
-        <a class="pure-menu-heading" href="">Facebook</a>
 
-        <ul>
-          <li class="pure-menu-selected"><a href="/">Home</a></li>
-          <li><a href="/display">Display Account</a></li>
-          <li><a href="/account/change">Change Account</a></li>
-          {% if session['username'] %}
-          <li><a href="#">{{ session['username'] }}</a></li>
-          <li><a href="/logout">Logout</a></li>
-          {% else %}
-          <li><a href="/login">Login</a></li>
-          {% endif %}
-        </ul>
+  <body>
+    <div style="width: 1000px; margin: 0px auto;">
+  <div class="pure-g">
+    <div class="pure-u-1-6">
+      <div class="1-box">
+	<div class="pure-menu pure-menu-open">
+          <br>
+	  <a class="pure-menu-heading">Facebook</a>
+	  <ul>
+	    <li class="pure-menu-selected"><a href="/"><br>Home<br><br></a></li>
+	    <li><a href="/register"><br>Register<br><br></a></li>
+	    {% if session['username'] %}
+	    <li><a href="/display"><br>Display Account<br><br></a></li>
+	    <li><a href="/account/change"><br>Change Account<br><br></a></li>
+	    <li><a href="#"><br>{{ session['username'] }}<br><br></a></li>
+	    <li><a href="/logout"><br>Logout<br><br></a></li>
+	    {% else %}
+	    <li><a href="/login"><br>Login<br><br></a></li>
+	    {% endif %}
+          </ul>
+	</div>
       </div>
     </div>
-    {% block body %}
-    {% endblock %}
+    
+    <div class="pure-u-2-3">
+      
+      <div class="1-box">
+      
+      <div align="right">
+	Created by Justin Kim and Cynthia Zhou. SoftDev period 6.
+      </div>
 
-    <div class="footer l-box is-center">
-      Created by Justin Kim and Cynthia Zhou. SoftDev period 6.
+	{% block body %}
+	{% endblock %}
+
+      </div>
+    </div>
+    
     </div>
   </body>
 </html>
