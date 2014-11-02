@@ -20,7 +20,7 @@ def login():
     password = request.form['password']
     valid_user = valid(username, password)
     if button == 'cancel' or not(valid_user):
-        return render_template('login.html')
+        return redirect('/')
     else:
         criteria = {'username': username, 'password': password}
         user = db.find_user(criteria)
@@ -29,14 +29,13 @@ def login():
             db.touch_user_login_time(criteria)
             return redirect('/')
         else:
-            return 'Invalid username and password combination <br><a href="\">Go Back</a>'
+            return render_template('login.html',error=True)
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         return render_template('register.html')
-
     button = request.form['button']
     username = request.form['username']
     password = request.form['password']
@@ -45,7 +44,7 @@ def register():
     else:
         criteria = {'username': username}
         if db.find_user(criteria):
-            return render_template('register.html')
+            return render_template('register.html',error=True)
         else:
             user_params = {'username': username, 'password': password}
             db.new_user(user_params)
@@ -59,20 +58,20 @@ def display():
         user = db.find_user({'username': session['username']})
         return render_template('display.html', user=user)
     else:
-        return render_template('login.html')
+        return render_template('display.html')
 
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
-    return redirect('/login')
+    if 'username' in session:
+        criteria = {'username': session['username']}
+        db.touch_user_logout_time(criteria)
+        session.pop('username', None)
+    return render_template('logout.html',logged_out=True)
 
 
-@app.route('/account/change', methods=['GET', 'POST'])
+@app.route('/change', methods=['GET', 'POST'])
 def change_account():
-    if 'username' not in session:
-        return redirect('/login')
-
     if request.method == 'GET':
         return render_template('change_account.html')
 
@@ -89,30 +88,25 @@ def change_account():
     if password:
         changeset['password'] = password
 
-    if valid_change(changeset):
+    if valid_change(username, password)==True:
         db.update_user(criteria, changeset)
         if username:
             session['username'] = username
-        return redirect('/')
+        return redirect('/display')
     else:
-        return render_template('change_account.html')
+        return render_template('change_account.html', error=valid_change(username, password))
 
-
-def valid_change(changeset):
-    if changeset['username'] == session['username']:
-        return False
-    if db.find_user(changeset['username']):
-        return False
+#returns True or an error that can be displayed on the webpage
+def valid_change(username, password):
+    if username == session['username']:
+        #lets the user change his password
+        if password == db.find_user({'username':username})['password']:
+            return "Your information has not been changed."
+    elif db.find_user({'username':username}):
+        return "That username has already been taken."
     return True
 
-
-def check_logged_in():
-    if 'username' in session:
-        return '<a href="/display">Logged in as ' + session['username']
-    else:
-        return '<a href="/login">Log In'
-
-
+#is this function needed?
 def valid(username, password):
     return True
 

@@ -5,10 +5,33 @@ Log In
 {% endblock %}
 
 {% block body %}
-<form method="POST">
-  <input type="text" name="username">
-  <input type="text" name="password">
-  <input type="submit" name="button" value="login">
-  <input type="submit" name="button" value="cancel">
+
+{% if session['username'] %}
+You are already logged in.
+
+{% else %}
+
+{% if error %}
+Invalid username and password combination. Please try again.
+{% endif %}
+
+<form method="POST" class="pure-form pure-form-aligned">
+  <fieldset>
+    <legend>Log into your account</legend>
+    <div class="pure-control-group">
+      <label for="username">Username</label>
+      <input type="text" name="username" placeholder="Username">
+    </div>
+    <div class="pure-control-group">
+      <label for="password">Password</label>
+      <input type="text" name="password" placeholder="Password"><br>
+    </div>
+    <div class="pure-controls">
+      <input type="submit" class="pure-button pure-button-primary" name="button" value="login">
+      <input type="submit" class="pure-button pure-button-primary" name="button" value="cancel">
+    </div>
+  </fieldset>
 </form>
+{% endif %}
+
 {% endblock %}

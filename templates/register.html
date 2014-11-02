@@ -5,11 +5,33 @@ Register
 {% endblock %}
 
 {% block body %}
-<form method="POST">
-  Please enter your desired username and password.
-  <input type="text" name="username">
-  <input type="text" name="password">
-  <input type="submit" name="button" value="register">
-  <input type="submit" name="button" value="cancel">
+
+{% if session['username'] %}
+You are already logged in.
+
+{% else %}
+
+{% if error %}
+That username as been taken. Please select another username.
+{% endif %}
+
+<form method="POST" class="pure-form pure-form-aligned">
+  <fieldset>
+    <legend>Register for an account</legend>
+    <div class="pure-control-group">
+      <label for="username">Desired Username</label>
+      <input type="text" name="username" placeholder="Desired Username">
+    </div>
+    <div class="pure-control-group">
+      <label for="password">Desired Password</label>
+      <input type="text" name="password" placeholder="Desired Password"><br>
+    </div>
+    <div class="pure-controls">
+      <input type="submit" class="pure-button pure-button-primary" name="button" value="register">
+      <input type="submit" class="pure-button pure-button-primary" name="button" value="cancel">
+    </div>
+  </fieldset>
 </form>
+{% endif %}
+
 {% endblock %}
