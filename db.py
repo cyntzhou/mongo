@@ -3,7 +3,7 @@ import datetime
 from pymongo import MongoClient
 
 client = MongoClient()
-db = client['facebook']
+db = client['account_manager']
 users = db['users']
 
 def new_user(user_params):
