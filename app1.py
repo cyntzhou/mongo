@@ -1,9 +1,17 @@
 from flask import Flask, request, render_template, redirect, session
-
+from functools import wraps
 import db
 
 app = Flask(__name__)
 
+def authenticate(func):
+    @wraps(func)
+    def inner():
+        if 'username' in session:
+            return func()
+        else:
+            return redirect('/login')
+    return inner
 
 @app.route('/')
 def home():
@@ -53,24 +61,23 @@ def register():
 
 
 @app.route('/display')
+@authenticate
 def display():
-    if 'username' in session:
-        user = db.find_user({'username': session['username']})
-        return render_template('display.html', user=user)
-    else:
-        return render_template('display.html')
+    user = db.find_user({'username': session['username']})
+    return render_template('display.html', user=user)
 
 
 @app.route('/logout')
+@authenticate
 def logout():
-    if 'username' in session:
-        criteria = {'username': session['username']}
-        db.touch_user_logout_time(criteria)
-        session.pop('username', None)
+    criteria = {'username': session['username']}
+    db.touch_user_logout_time(criteria)
+    session.pop('username', None)
     return render_template('logout.html',logged_out=True)
 
 
 @app.route('/change', methods=['GET', 'POST'])
+@authenticate
 def change_account():
     if request.method == 'GET':
         return render_template('change_account.html')
